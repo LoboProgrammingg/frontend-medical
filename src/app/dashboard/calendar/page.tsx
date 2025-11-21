@@ -64,8 +64,9 @@ export default function CalendarPage() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!file.name.toLowerCase().endsWith('.pdf')) {
-        toast.error('Apenas arquivos PDF são permitidos');
+      const ext = file.name.toLowerCase();
+      if (!ext.endsWith('.pdf') && !ext.endsWith('.xlsx') && !ext.endsWith('.xls')) {
+        toast.error('Apenas arquivos PDF ou Excel (.xlsx, .xls) são permitidos');
         return;
       }
       setSelectedFile(file);
@@ -74,7 +75,7 @@ export default function CalendarPage() {
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            toast.error('Selecione um arquivo PDF');
+            toast.error('Selecione um arquivo PDF ou Excel');
             return;
         }
 
@@ -115,9 +116,9 @@ export default function CalendarPage() {
             
             // Mensagens mais amigáveis
             if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
-                toast.error('O processamento demorou muito. Tente novamente ou use um PDF menor.');
+                toast.error('O processamento demorou muito. Tente novamente ou use um arquivo menor.');
             } else if (errorMessage.includes('408')) {
-                toast.error('Timeout ao processar. O PDF pode estar muito grande. Tente novamente.');
+                toast.error('Timeout ao processar. O arquivo pode estar muito grande. Tente novamente.');
             } else {
                 toast.error(errorMessage);
             }
@@ -210,21 +211,21 @@ export default function CalendarPage() {
         {showUploadForm && (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Upload de Calendário PDF</CardTitle>
+              <CardTitle>Upload de Calendário</CardTitle>
               <CardDescription>
-                Envie um PDF de calendário e informe seus dados para extração automática
+                Envie um PDF ou Excel (.xlsx) de calendário e informe seus dados para extração automática
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">
-                  Arquivo PDF *
+                  Arquivo (PDF ou Excel) *
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".pdf"
+                    accept=".pdf,.xlsx,.xls"
                     onChange={handleFileSelect}
                     className="hidden"
                     id="file-input"
@@ -235,7 +236,7 @@ export default function CalendarPage() {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <FileText className="h-4 w-4 mr-2" />
-                    Selecionar PDF
+                    Selecionar Arquivo
                   </Button>
                   {selectedFile && (
                     <div className="flex items-center gap-2">
@@ -347,7 +348,7 @@ export default function CalendarPage() {
                 Nenhum calendário ainda
               </h3>
               <p className="text-muted-foreground mb-4">
-                Faça upload de um PDF de calendário para começar
+                Faça upload de um PDF ou Excel de calendário para começar
               </p>
               <Button onClick={() => setShowUploadForm(true)}>
                 <Upload className="h-4 w-4 mr-2" />

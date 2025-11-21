@@ -5,6 +5,22 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
+// Debug: Log da URL base (apenas em desenvolvimento)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  console.log('🔗 API_BASE_URL:', API_BASE_URL);
+}
+
+// Garantir que sempre use HTTPS em produção
+const getApiBaseUrl = () => {
+  const url = API_BASE_URL;
+  // Se estiver em produção (HTTPS) e a URL for HTTP, converter para HTTPS
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
+    console.warn('⚠️ Convertendo HTTP para HTTPS:', url, '→', url.replace('http://', 'https://'));
+    return url.replace('http://', 'https://');
+  }
+  return url;
+};
+
 /**
  * Faz requisição HTTP com configuração automática de headers
  */
@@ -25,7 +41,15 @@ async function request<T>(
     headers,
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+  const baseUrl = getApiBaseUrl();
+  const fullUrl = `${baseUrl}${endpoint}`;
+  
+  // Debug em desenvolvimento
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    console.log('🌐 Fetch:', fullUrl);
+  }
+  
+  const response = await fetch(fullUrl, config);
 
   if (!response.ok) {
     // Se for erro 401 (não autorizado), limpar localStorage

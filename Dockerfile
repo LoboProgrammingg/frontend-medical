@@ -7,6 +7,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Declarar ARG para variáveis de ambiente do build
+# Railway passa variáveis de ambiente, mas precisam ser declaradas como ARG
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Copiar arquivos de dependências
 COPY package*.json ./
 
@@ -17,6 +22,7 @@ RUN npm ci
 COPY . .
 
 # Build da aplicação Next.js
+# As variáveis NEXT_PUBLIC_* serão embutidas no código durante o build
 RUN npm run build
 
 # Stage 2: Production

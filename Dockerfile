@@ -39,17 +39,17 @@ RUN chown -R nextjs:nodejs /app
 # Usar usuário não-root
 USER nextjs
 
-# Expor porta
+# Expor porta (Railway usa variável $PORT)
 EXPOSE 3000
 
-# Variável de ambiente
-ENV PORT=3000
+# Variável de ambiente (Railway define $PORT)
 ENV NODE_ENV=production
+ENV PORT=3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+    CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 3000) + '/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Comando para iniciar
-CMD ["node", "server.js"]
+# Comando para iniciar (Railway define $PORT via variável de ambiente)
+CMD ["sh", "-c", "node server.js"]
 

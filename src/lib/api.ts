@@ -5,19 +5,31 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
-// Debug: Log da URL base (apenas em desenvolvimento)
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  console.log('🔗 API_BASE_URL:', API_BASE_URL);
-}
-
 // Garantir que sempre use HTTPS em produção
 const getApiBaseUrl = () => {
-  const url = API_BASE_URL;
+  let url = API_BASE_URL;
+  
   // Se estiver em produção (HTTPS) e a URL for HTTP, converter para HTTPS
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
-    console.warn('⚠️ Convertendo HTTP para HTTPS:', url, '→', url.replace('http://', 'https://'));
-    return url.replace('http://', 'https://');
+  if (typeof window !== 'undefined') {
+    const isProduction = window.location.protocol === 'https:';
+    const isHttpUrl = url.startsWith('http://');
+    const isRailwayUrl = url.includes('railway.app');
+    
+    // Sempre converter HTTP para HTTPS em produção, especialmente para Railway
+    if (isProduction && isHttpUrl && isRailwayUrl) {
+      const httpsUrl = url.replace('http://', 'https://');
+      console.warn('⚠️ [API] Convertendo HTTP para HTTPS:', url, '→', httpsUrl);
+      return httpsUrl;
+    }
+    
+    // Se estiver em produção e a URL for HTTP (mesmo que não seja Railway), converter
+    if (isProduction && isHttpUrl && !url.includes('localhost')) {
+      const httpsUrl = url.replace('http://', 'https://');
+      console.warn('⚠️ [API] Convertendo HTTP para HTTPS em produção:', url, '→', httpsUrl);
+      return httpsUrl;
+    }
   }
+  
   return url;
 };
 
@@ -44,9 +56,11 @@ async function request<T>(
   const baseUrl = getApiBaseUrl();
   const fullUrl = `${baseUrl}${endpoint}`;
   
-  // Debug em desenvolvimento
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log('🌐 Fetch:', fullUrl);
+  // Debug sempre (para identificar problemas)
+  if (typeof window !== 'undefined') {
+    console.log('🌐 [API] Fetch:', fullUrl);
+    console.log('🔗 [API] Base URL original:', API_BASE_URL);
+    console.log('🔗 [API] Base URL processada:', baseUrl);
   }
   
   const response = await fetch(fullUrl, config);

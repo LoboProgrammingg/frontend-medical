@@ -1,0 +1,132 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+
+    <!-- Gradiente Tecnológico (Azul Profundo para Ciano Brilhante) -->
+
+    <linearGradient id="techGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+
+      <stop offset="0%" style="stop-color:#004e92;stop-opacity:1" />
+
+      <stop offset="100%" style="stop-color:#00d2ff;stop-opacity:1" />
+
+    </linearGradient>
+
+    
+
+    <!-- Filtro de Brilho Suave para dar um aspecto digital -->
+
+    <filter id="softGlow" height="300%" width="300%" x="-75%" y="-75%">
+
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+
+      <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+
+    </filter>
+
+  </defs>
+
+  <!-- Fundo Quadrado Arredondado Suave -->
+
+  <rect x="20" y="20" width="360" height="360" rx="60" ry="60" fill="#f0f5fa" />
+
+  <!-- Grupo Principal da Logo com Filtro de Brilho -->
+
+  <g filter="url(#softGlow)" transform="translate(200, 200)">
+
+    
+
+    <!-- Estrutura Central (O "Chip/Núcleo") -->
+
+    <circle cx="0" cy="0" r="35" fill="url(#techGradient)" opacity="0.2"/>
+
+    <circle cx="0" cy="0" r="15" fill="url(#techGradient)"/>
+
+    
+
+    <!-- CONEXÕES DA REDE NEURAL FORMANDO A CRUZ MÉDICA -->
+
+    
+
+    <!-- Braço Superior -->
+
+    <line x1="0" y1="-20" x2="0" y2="-130" stroke="url(#techGradient)" stroke-width="12" stroke-linecap="round"/>
+
+    <circle cx="0" cy="-130" r="12" fill="url(#techGradient)"/>
+
+    <!-- Nós secundários superiores -->
+
+    <line x1="0" y1="-60" x2="-25" y2="-90" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="-25" cy="-90" r="6" fill="url(#techGradient)"/>
+
+    <line x1="0" y1="-80" x2="25" y2="-110" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="25" cy="-110" r="6" fill="url(#techGradient)"/>
+
+    <!-- Braço Inferior -->
+
+    <line x1="0" y1="20" x2="0" y2="130" stroke="url(#techGradient)" stroke-width="12" stroke-linecap="round"/>
+
+    <circle cx="0" cy="130" r="12" fill="url(#techGradient)"/>
+
+    <!-- Nós secundários inferiores -->
+
+    <line x1="0" y1="60" x2="25" y2="90" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="25" cy="90" r="6" fill="url(#techGradient)"/>
+
+    <line x1="0" y1="80" x2="-25" y2="110" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="-25" cy="110" r="6" fill="url(#techGradient)"/>
+
+    <!-- Braço Esquerdo -->
+
+    <line x1="-20" y1="0" x2="-130" y2="0" stroke="url(#techGradient)" stroke-width="12" stroke-linecap="round"/>
+
+    <circle cx="-130" cy="0" r="12" fill="url(#techGradient)"/>
+
+    <!-- Nós secundários esquerdos -->
+
+    <line x1="-60" y1="0" x2="-90" y2="25" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="-90" cy="25" r="6" fill="url(#techGradient)"/>
+
+     <line x1="-80" y1="0" x2="-110" y2="-25" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="-110" cy="-25" r="6" fill="url(#techGradient)"/>
+
+    <!-- Braço Direito -->
+
+    <line x1="20" y1="0" x2="130" y2="0" stroke="url(#techGradient)" stroke-width="12" stroke-linecap="round"/>
+
+    <circle cx="130" cy="0" r="12" fill="url(#techGradient)"/>
+
+    <!-- Nós secundários direitos -->
+
+    <line x1="60" y1="0" x2="90" y2="-25" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="90" cy="-25" r="6" fill="url(#techGradient)"/>
+
+    <line x1="80" y1="0" x2="110" y2="25" stroke="url(#techGradient)" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+    <circle cx="110" cy="25" r="6" fill="url(#techGradient)"/>
+
+    
+
+    <!-- Pequenos pontos de dados flutuantes para detalhe extra -->
+
+    <circle cx="45" cy="45" r="4" fill="url(#techGradient)" opacity="0.8"/>
+
+    <circle cx="-45" cy="-45" r="4" fill="url(#techGradient)" opacity="0.8"/>
+
+    <circle cx="45" cy="-45" r="4" fill="url(#techGradient)" opacity="0.8"/>
+
+    <circle cx="-45" cy="45" r="4" fill="url(#techGradient)" opacity="0.8"/>
+
+  </g>
+
+</svg>
+

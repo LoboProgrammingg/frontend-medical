@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -34,9 +35,18 @@ export default function LoginPage() {
       {/* Lado Esquerdo - Branding Médico */}
       <div className="hidden lg:flex lg:w-1/2 medical-gradient p-12 text-white flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-8">
-            <Heart className="h-8 w-8" fill="white" />
-            <h1 className="text-3xl font-bold">Amorinha</h1>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <Image
+                src="/images/logos/Untitled.png"
+                alt="Amorinha Logo"
+                fill
+                className="object-contain drop-shadow-lg"
+                priority
+                sizes="40px"
+              />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight">Amorinha</h1>
           </div>
           
           <div className="space-y-8 mt-20">
@@ -88,11 +98,34 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <Card className="w-full max-w-md border-none shadow-2xl">
           <CardHeader className="space-y-1 text-center pb-8">
-            <div className="flex justify-center mb-4 lg:hidden">
-              <Heart className="h-12 w-12 text-primary" fill="currentColor" />
+            {/* Logo - Mobile */}
+            <div className="flex justify-center mb-6 lg:hidden">
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/images/logos/Untitled.png"
+                  alt="Amorinha Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="64px"
+                />
+              </div>
             </div>
-            <CardTitle className="text-3xl font-bold">Bem-vinda de volta! 💙</CardTitle>
-            <CardDescription className="text-base">
+            {/* Logo - Desktop */}
+            <div className="flex justify-center mb-4 hidden lg:block">
+              <div className="relative w-14 h-14">
+                <Image
+                  src="/images/logos/Untitled.png"
+                  alt="Amorinha Logo"
+                  fill
+                  className="object-contain opacity-95"
+                  priority
+                  sizes="56px"
+                />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-bold tracking-tight">Bem-vinda de volta! 💙</CardTitle>
+            <CardDescription className="text-base mt-2 text-muted-foreground">
               Entre para acessar sua assistente médica
             </CardDescription>
           </CardHeader>

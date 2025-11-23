@@ -35,7 +35,7 @@ export const calendarService = {
       
       // Criar AbortController para timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minutos
+      const timeoutId = setTimeout(() => controller.abort(), 360000); // 6 minutos (IA pode demorar)
       
       const response = await fetch(`${API_URL}/calendar/upload`, {
         method: 'POST',
@@ -68,7 +68,7 @@ export const calendarService = {
       console.error('[CALENDAR-UPLOAD] Erro na requisição:', error);
       
       if (error.name === 'AbortError') {
-        throw new Error('Timeout: O processamento demorou mais de 3 minutos. Tente novamente ou use um PDF menor.');
+        throw new Error('Timeout: O processamento demorou mais de 6 minutos. Tente novamente ou use um arquivo menor.');
       }
       
       throw error;

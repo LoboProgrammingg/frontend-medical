@@ -95,5 +95,12 @@ export const calendarService = {
   async delete(calendarId: string): Promise<void> {
     return del(`/calendar/${calendarId}`);
   },
+
+  /**
+   * Criar evento personalizado
+   */
+  async createEvent(calendarId: string, event: Partial<CalendarEvent>): Promise<CalendarEvent> {
+    return post<CalendarEvent>(`/calendar/${calendarId}/events`, event);
+  },
 };
 

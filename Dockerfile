@@ -45,17 +45,21 @@ RUN chown -R nextjs:nodejs /app
 # Usar usuário não-root
 USER nextjs
 
-# Expor porta (Railway usa variável $PORT)
+# Expor porta (Railway usa variável $PORT dinamicamente)
+# EXPOSE é apenas informativo - Railway usa $PORT
 EXPOSE 3000
 
-# Variável de ambiente (Railway define $PORT)
+# Variável de ambiente
 ENV NODE_ENV=production
-ENV PORT=3000
+# NÃO fixar PORT aqui - Railway define $PORT automaticamente
+# O Next.js standalone lê process.env.PORT automaticamente
 
-# Health check (verifica se a página inicial responde)
+# Health check (usa $PORT do Railway)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 3000) + '/', (r) => {process.exit(r.statusCode === 200 || r.statusCode === 307 || r.statusCode === 308 ? 0 : 1)})"
+    CMD sh -c 'node -e "require(\"http\").get(\"http://localhost:\" + (process.env.PORT || 3000) + \"/\", (r) => {process.exit(r.statusCode === 200 || r.statusCode === 307 || r.statusCode === 308 ? 0 : 1)})"'
 
-# Comando para iniciar (Railway define $PORT via variável de ambiente)
+# Comando para iniciar
+# Next.js standalone lê process.env.PORT automaticamente
+# Railway define $PORT via variável de ambiente (pode ser 8080, 3000, etc)
 CMD ["sh", "-c", "node server.js"]
 

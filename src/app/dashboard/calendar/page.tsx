@@ -20,6 +20,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { calendarService } from '@/services/calendarService';
 import { toast } from 'sonner';
 import type { Calendar as CalendarType, CalendarEvent } from '@/types';
+import { GoogleCalendarView } from '@/components/calendar/GoogleCalendarView';
+import { EventFormDialog } from '@/components/calendar/EventFormDialog';
 
 export default function CalendarPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -27,6 +29,9 @@ export default function CalendarPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [showUploadForm, setShowUploadForm] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [selectedCalendarId, setSelectedCalendarId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadData, setUploadData] = useState({
@@ -140,12 +145,54 @@ export default function CalendarPage() {
     }
   };
 
+  const handleAddEvent = (date: Date) => {
+    // Encontrar o primeiro calendário que contém esta data
+    const calendar = calendars.find((cal) => {
+      const start = new Date(cal.start_date);
+      const end = new Date(cal.end_date);
+      return date >= start && date <= end;
+    });
+    
+    if (calendar) {
+      setSelectedCalendarId(calendar.id);
+      setSelectedDate(date);
+      setShowEventForm(true);
+    } else {
+      toast.error('Selecione um calendário que contenha esta data');
+    }
+  };
+
+  const handleSaveEvent = async (eventData: {
+    event_type: 'work' | 'on_call';
+    event_date: string;
+    day_of_week?: string;
+    start_time?: string;
+    end_time?: string;
+    location?: string;
+    shift_type?: string;
+    notes?: string;
+  }) => {
+    if (!selectedCalendarId) {
+      toast.error('Calendário não selecionado');
+      return;
+    }
+
+    try {
+      await calendarService.createEvent(selectedCalendarId, eventData);
+      toast.success('Evento adicionado com sucesso!');
+      await loadCalendars();
+    } catch (error: any) {
+      console.error('Erro ao criar evento:', error);
+      toast.error(error.message || 'Erro ao criar evento');
+      throw error;
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
     });
   };
 
@@ -403,6 +450,28 @@ export default function CalendarPage() {
                       </div>
                     </div>
 
+                    {/* Visualização estilo Google Calendar */}
+                    <div className="mb-6">
+                      <GoogleCalendarView
+                        events={calendar.events}
+                        calendarStartDate={calendar.start_date}
+                        calendarEndDate={calendar.end_date}
+                        onAddEvent={handleAddEvent}
+                        onEventClick={(event) => {
+                          toast.info(
+                            `${event.shift_type || event.location || 'Evento'} - ${
+                              event.start_time && event.end_time
+                                ? `${formatTime(event.start_time)} às ${formatTime(event.end_time)}`
+                                : 'Sem horário definido'
+                            }`
+                          );
+                        }}
+                      />
+                    </div>
+
+                    {/* Visualização por semana (mantida para referência) */}
+                    <div className="mt-8">
+                      <h3 className="text-lg font-semibold mb-4">Visualização por Semana</h3>
                     {/* Agrupar todos os eventos por semana e depois por dia */}
                     {(() => {
                       // Combinar todos os eventos
@@ -549,6 +618,7 @@ export default function CalendarPage() {
                         </div>
                       );
                     })()}
+                    </div>
                   </CardContent>
                 </Card>
               );
@@ -556,6 +626,18 @@ export default function CalendarPage() {
           </div>
         )}
       </main>
+
+      {/* Dialog para adicionar evento */}
+      <EventFormDialog
+        open={showEventForm}
+        onClose={() => {
+          setShowEventForm(false);
+          setSelectedDate(undefined);
+          setSelectedCalendarId(null);
+        }}
+        onSave={handleSaveEvent}
+        selectedDate={selectedDate}
+      />
     </div>
   );
 }
